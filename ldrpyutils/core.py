@@ -223,7 +223,10 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
     arrConcepts = []
     items_data = register_items
     for item in items_data:
-        concept = URIRef(str(item['id']))
+        try:
+            concept = URIRef(str(item['id']))
+        except UnicodeEncodeError:
+            concept = URIRef((item['id']).encode('utf-8'))
         g.add((concept, RDF.type, SKOS.Concept))
 
         #g.add((register, RDFS.member, concept))
