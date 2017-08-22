@@ -1,8 +1,10 @@
-from distutils.core import setup
+#from distutils.core import setup
+from setuptools import setup
+
 
 setup(
     name='ldrpyutils',
-    version='0.1',
+    version='0.2',
     packages=['ldrpyutils'],
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -16,6 +18,11 @@ setup(
     author='Jonathan Yu',
     author_email='jonathan.yu@csiro.au',
     description='Python utils for the Linked Data Registry',
+    install_requires=[
+                  'openpyxl',
+                  'rdflib',
+                  'requests'
+                        ],
     entry_points={
         'console_scripts': ['excel2ldr=ldrpyutils.core:excel2ldr'],
     },
