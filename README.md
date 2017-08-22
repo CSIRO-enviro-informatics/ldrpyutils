@@ -10,8 +10,12 @@ Python utils for the Linked Data Registry
 $ pip install ldrpyutils
 
 # download starter pack
-$ wget csiro-starter-pack.zip
-$ excel2ldr --user usename --pass passwd myvocabs.xlsx
+$ wget https://github.com/CSIRO-LW-LD/ldrpyutils/blob/master/quickstart/csiro-starter-pack.zip
+$ unzip csiro-starter-pack.zip
+
+# edit fields in examples/simple.xlsx to point to your register on a LDR instance
+# edit config to point to your LDR instance
+$ excel2ldr --user username --pass passwd examples/simple.xlsx
 ```
 
 
@@ -56,10 +60,10 @@ $ pip install -e .
 ### Running
 ```
 # run excel2ldr - transform excel data to a single register of vocabs, build graph, post to a LDR registry
-$ excel2ldr --user usename --pass passwd  test-data/simple.xlsx
+$ excel2ldr --user username --pass passwd  test-data/simple.xlsx
 
 # run excel2ldr - transform excel sheets to multiple registers of vocabs, build graph, post to a LDR registry
-$ excel2ldr --user usename --pass passwd --multi test-data/simple.xlsx
+$ excel2ldr --user username --pass passwd --multi test-data/simple.xlsx
 
 ```
 
