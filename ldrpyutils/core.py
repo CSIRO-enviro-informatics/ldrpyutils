@@ -272,6 +272,7 @@ def post_update_to_online_register(register_id, register_url, data, registry_aut
             r = s.post(url, data=data, headers=headers)
             if r.status_code == 204:
                 resFlag = True
+                print "Successfully updated register '" + register_id + "'"
             if verbose:
                 print r.status_code
     return resFlag
