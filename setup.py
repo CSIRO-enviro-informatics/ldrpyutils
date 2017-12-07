@@ -4,12 +4,13 @@ from setuptools import setup
 
 setup(
     name='ldrpyutils',
-    version='0.2.3',
+    version='0.2.4',
     packages=['ldrpyutils'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
         'Topic :: Text Processing :: Linguistic',
       ],
     keywords='linked-data vocabularies excel linked-data-registry skos',

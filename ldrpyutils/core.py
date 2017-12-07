@@ -15,7 +15,7 @@ def load_simple_file(excel_file,  user=None, passwd=None, emitFile=False, regist
     wb = load_workbook(excel_file)
 
     if verbose:
-        print wb.get_sheet_names()
+        print(wb.get_sheet_names())
 
     sheetsDict = {}
     reginfo_ws = False
@@ -35,8 +35,8 @@ def load_simple_file(excel_file,  user=None, passwd=None, emitFile=False, regist
     regitems_obj = process_all_registeritems_in_dict(sheetsDict)
 
     if verbose:
-        print reginfo_obj
-        print regitems_obj
+        print(reginfo_obj)
+        print(regitems_obj)
 
 
     (g, status) = build_graph_and_post(reginfo_obj, regitems_obj,
@@ -47,7 +47,7 @@ def load_simple_file(excel_file,  user=None, passwd=None, emitFile=False, regist
                         verbose=verbose
                         )
     if verbose:
-        print status
+        print(status)
     return True
 
 def get_registerinfo(ws):
@@ -69,7 +69,7 @@ def process_all_registeritems_in_dict(sheetsDict, verbose=False):
         return False
 
     regItemsObj = {}
-    for registerid, ws in sheetsDict.iteritems():
+    for registerid, ws in sheetsDict.items():
         res = get_registeritems(registerid, ws, verbose=verbose)
         arrResults = []
         for i, rowvalues in enumerate(res['items']):
@@ -85,7 +85,7 @@ def process_all_registeritems_in_dict(sheetsDict, verbose=False):
 
 def get_registeritems(registerid, sheet, verbose=False):
     if verbose:
-        print "reg id: " + registerid
+        print("reg id: " + registerid)
     return parse_sheet(sheet)
 
 
@@ -134,11 +134,13 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
 
     prefixes_g = rdflib.Graph()
     if verbose:
-        print "Prefix file..."
+        print("Prefix file...")
     PREFIX_FILE = pkg_resources.resource_filename("ldrpyutils", 'data/prefixes.ttl')
     if verbose:
-        print PREFIX_FILE
-    prefixes_g.parse(PREFIX_FILE, format="ttl")
+        print(PREFIX_FILE)
+    with open(PREFIX_FILE) as f:
+        #read_data = f.read()
+        prefixes_g.parse(f, format="ttl")
     nsMgr = NamespaceManager(prefixes_g)
 
     all_ns = [n for n in nsMgr.namespaces()]
@@ -160,8 +162,8 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
         g = get_register_graph(register_id, reginfo_obj, regitems_obj[register_id], nsMgr, prefix_idx, ns_prefix_lookup)
         data = g.serialize(None,format='turtle')
         if verbose:
-            print "Outputting graph for " + register_id
-            print data
+            print("Outputting graph for " + register_id)
+            print(data)
         if emitFile or updateOnlineRegisters:
             filename = register_id + ".ttl"
             g.serialize(filename, format="turtle")
@@ -185,7 +187,7 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
             data = g.serialize(format='turtle')
             status['didEmitFile'] = True
             if verbose:
-                print data
+                print(data)
             if emitFile:
                 filename = register_id + ".ttl"
                 g.serialize(filename, format="turtle")
@@ -248,33 +250,33 @@ def post_update_to_online_register(register_id, register_url, data, registry_aut
     resFlag = False
 
     if verbose:
-        print r.status_code
-        print r.text
-        print r.cookies.get_dict()
+        print(r.status_code)
+        print(r.text)
+        print(r.cookies.get_dict())
 
     if r.status_code == 200:
         #upload the data
         url = register_url
         headers = {"Content-Type": "text/turtle"}
         if verbose:
-            print s.cookies.get_dict()
+            print(s.cookies.get_dict())
 
         r=s.post(url, data=data, headers=headers)
         if verbose:
-            print r.status_code
+            print(r.status_code)
         if r.status_code == 403:
             #force update
             url = register_url + "?edit"
             headers = {"Content-Type": "text/turtle"}
             if verbose:
-                print s.cookies.get_dict()
+                print(s.cookies.get_dict())
 
             r = s.post(url, data=data, headers=headers)
             if r.status_code == 204:
                 resFlag = True
-                print "Successfully updated register '" + register_id + "'"
+                print("Successfully updated register '" + register_id + "'")
             if verbose:
-                print r.status_code
+                print(r.status_code)
     return resFlag
 
 def load_multi_register_file(excel_file, user=None, passwd=None, emitFile=False, registry_auth_url=None,
@@ -282,7 +284,7 @@ def load_multi_register_file(excel_file, user=None, passwd=None, emitFile=False,
                              verbose=False):
     wb = load_workbook(excel_file)
     if verbose:
-        print wb.get_sheet_names()
+        print(wb.get_sheet_names())
 
     sheetsDict = {}
     reginfo_ws = False
@@ -302,8 +304,8 @@ def load_multi_register_file(excel_file, user=None, passwd=None, emitFile=False,
     regitems_obj = process_all_registeritems_in_dict(sheetsDict, verbose)
 
     if verbose:
-        print reginfo_obj
-        print regitems_obj
+        print(reginfo_obj)
+        print(regitems_obj)
 
 
     #build the graph
@@ -312,7 +314,7 @@ def load_multi_register_file(excel_file, user=None, passwd=None, emitFile=False,
                         updateOnlineRegisters=updateOnlineRegisters,
                         verbose=verbose)
     if verbose:
-        print status
+        print(status)
     return True
 
 def get_registerinfo_multi_register(ws):
@@ -384,7 +386,7 @@ def excel2ldr():
     verbose = False
     if args.isVerbose:
         verbose = True
-        print "Verbose mode turned on"
+        print("Verbose mode turned on")
 
     user = args.user
     passwd = args.passwd
