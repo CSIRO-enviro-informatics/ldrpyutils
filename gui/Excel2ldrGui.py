@@ -48,11 +48,17 @@ class AboutBox(wx.Dialog):
 
 #Main panel setup here
 class Frame(wx.Frame):
+
     # initialise configuration
     def setupConfigs(self):
-        self.configfile = "../config.json"
+        self.configfile = self.resource_path("config.json")
         self.readConfig()
         self.isMulti = False
+
+    def resource_path(self, relative):
+        if hasattr(sys, "_MEIPASS"):
+            return os.path.join(sys._MEIPASS, relative)
+        return os.path.join(relative)
 
     def readConfig(self):
         self.config = None
