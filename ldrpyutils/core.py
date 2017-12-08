@@ -6,6 +6,7 @@ import requests
 import json
 import argparse
 import pkg_resources
+import sys, os
 
 DATA_PATH = pkg_resources.resource_filename("ldrpyutils", 'data/')
 
@@ -115,6 +116,11 @@ def parse_sheet(sheet):
     result['items'] = arrItems
     return result
 
+def resource_path(relative):
+        if hasattr(sys, "_MEIPASS"):
+            return os.path.join(sys._MEIPASS, relative)
+        return os.path.join(relative)
+
 def build_graph_and_post(reginfo_obj, regitems_obj,
                 user=None, passwd=None, mode='single', emitFile=False,
                 registry_auth_url=None,
@@ -135,7 +141,16 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
     prefixes_g = rdflib.Graph()
     if verbose:
         print("Prefix file...")
+        print(__file__)
     PREFIX_FILE = pkg_resources.resource_filename("ldrpyutils", 'data/prefixes.ttl')
+    #if(pkg_resources.resource_exists("ldrpyutils", 'data/prefixes.ttl')):
+    #    if verbose:
+    #        print("Prefix file exists")
+    #        print(pkg_resources.resource_string("ldrpyutils", 'data/prefixes.ttl'))
+    #else:
+    #    if verbose:
+    #        print("Prefix file does not exist!")
+
     if verbose:
         print(PREFIX_FILE)
     with open(PREFIX_FILE) as f:
