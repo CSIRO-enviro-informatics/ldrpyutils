@@ -75,6 +75,9 @@ class Frame(wx.Frame):
         wx.Frame.__init__(self, None, title=title, pos=(150, 150), size=(500, 500))
         self.Bind(wx.EVT_CLOSE, self.OnClose)
 
+        ico = wx.Icon(self.resource_path("csiro.ico"), wx.BITMAP_TYPE_ICO)
+        self.SetIcon(ico)
+
         # Menu items defined here
         menuBar = wx.MenuBar()
         menu = wx.Menu()

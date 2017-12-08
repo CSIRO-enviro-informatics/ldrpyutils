@@ -4,9 +4,10 @@ block_cipher = None
 
 
 a = Analysis(['Excel2ldrGui.py'],
-             pathex=['C:\\Python27\\Scripts', 'C:\\Python27\\Scripts\\Python27\\Lib\\site-packages','C:\\Repositories\\git\\github\\csiro-lw-ld\\ldrpyutils\\gui'],
+             pathex=[],
              binaries=[],
-             datas=[( 'config.json', '.' ), 
+             datas=[( '../config.json', '.' ), 
+					( 'csiro.ico', '.' ),
 			        ('../ldrpyutils/data/*.ttl', 'ldrpyutils/data' )],
              hiddenimports=['rdflib.plugins','rdflib.plugins.memory','rdflib','ldrpyutils','rdflib.plugins.parsers.notation3','rdflib.plugins.serializers.turtle'],
              hookspath=[],
@@ -27,4 +28,4 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=False )
+          console=False , icon='csiro.ico')
