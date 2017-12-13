@@ -10,7 +10,7 @@ python:
 addons:
   apt:
      packages:
-        - python-wxgtk3.0
+        - python-wxgtk2.8
 virtualenv:
   system_site_packages: true
 # command to install dependencies
