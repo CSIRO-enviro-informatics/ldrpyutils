@@ -220,6 +220,10 @@ class Frame(wx.Frame):
                                           updateOnlineRegisters=updateOnlineRegisters,
                                           verbose=verbose
                                           )
+                if(resultFlag):
+                    self.statusbar.SetStatusText("Content successfully sent!")
+                else:
+                    self.statusbar.SetStatusText("Content send failed.")
         except requests.ConnectionError as e:
             #print("ConnectionError")
             self.displayConnectionProblemDlg()

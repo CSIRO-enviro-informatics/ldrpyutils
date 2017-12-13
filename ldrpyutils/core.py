@@ -279,7 +279,10 @@ def post_update_to_online_register(register_id, register_url, data, registry_aut
         r=s.post(url, data=data, headers=headers)
         if verbose:
             print(r.status_code)
-        if r.status_code == 403:
+        if r.status_code == 201:
+                resFlag = True
+                print("Successfully created items in register '" + register_id + "'")
+        elif r.status_code == 403:
             #force update
             url = register_url + "?edit"
             headers = {"Content-Type": "text/turtle"}
@@ -287,6 +290,7 @@ def post_update_to_online_register(register_id, register_url, data, registry_aut
                 print(s.cookies.get_dict())
 
             r = s.post(url, data=data, headers=headers)
+
             if r.status_code == 204:
                 resFlag = True
                 print("Successfully updated register '" + register_id + "'")

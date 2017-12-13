@@ -4,12 +4,12 @@ block_cipher = None
 
 
 a = Analysis(['Excel2ldrGui.py'],
-             pathex=[],
+             pathex=['C:\\Python27\\Scripts', 'C:\\Python27\\Scripts\\Python27\\Lib\\site-packages'],
              binaries=[],
              datas=[( '../config.json', '.' ), 
 					( 'csiro.ico', '.' ),
 			        ('../ldrpyutils/data/*.ttl', 'ldrpyutils/data' )],
-             hiddenimports=['rdflib.plugins','rdflib.plugins.memory','rdflib','ldrpyutils','rdflib.plugins.parsers.notation3','rdflib.plugins.serializers.turtle'],
+             hiddenimports=['rdflib.plugins','rdflib.plugins', 'rdflib.plugins.memory','rdflib','ldrpyutils','rdflib.plugins.parsers.notation3','rdflib.plugins.serializers.turtle'],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
