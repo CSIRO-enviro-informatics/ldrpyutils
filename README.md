@@ -22,6 +22,14 @@ The standalone executables have been precompiled for Windows and Mac. [Download 
 3. Stub registers created on Linked Data Registry instance
 
 
+### Example Excel formats
+
+For Excel2ldrGui, you will need to use a simple excel format or a multiple-register excel format. Examples of these are providedin the  test-data repository. 
+
+1. Single register of vocabs (i.e. simple list) - see test-data/simple.xlsx
+2. Multiple registers of vocabs (i.e. one for each sheet) - see test-data/multi-register.xlsx 
+
+
 ## excel2ldr command line tool
 
 ### Quickstart
