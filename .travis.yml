@@ -1,14 +1,18 @@
 language: python
+sudo: false
 cache:
-  directories:
-  - "$HOME/.cache/pip"
-  - "$HOME/.pyenv"
+  - apt
+  - directories:
+    - "$HOME/.cache/pip"
+    - "$HOME/.pyenv"
 python:
-  - "3.5"
+  - "3.6"
+addons:
+  apt:
+     packages:
+        - python-wxgtk3.0
 virtualenv:
   system_site_packages: true
-before_install:
-  - sudo apt-get install python-wxgtk3.0
 # command to install dependencies
 install:
   - pip install -r requirements.txt
