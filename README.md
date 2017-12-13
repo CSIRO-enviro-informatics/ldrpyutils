@@ -4,6 +4,10 @@ Python utils for the Linked Data Registry
 Persistent Link: http://doi.org/10.4225/08/5a2744c74d949 
 Attribution Statement: Yu, Jonathan (2017): ldrpyutils. v1. CSIRO. Software Collection. 10.4225/08/5a2744c74d949
 
+![Travis build](https://travis-ci.org/CSIRO-LW-LD/ldrpyutils.svg?branch=master)
+
+
+
 ## excel2ldr
 
 ### Quickstart
