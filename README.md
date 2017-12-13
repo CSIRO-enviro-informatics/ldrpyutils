@@ -7,8 +7,22 @@ Attribution Statement: Yu, Jonathan (2017): ldrpyutils. v1. CSIRO. Software Coll
 ![Travis build](https://travis-ci.org/CSIRO-LW-LD/ldrpyutils.svg?branch=master)
 
 
+## Excel2ldrGui Window-based tool
 
-## excel2ldr
+Excel2ldrGui is a GUI front-end to Excel-to-LDR to help users upload and update content on a Linked Data Registry. 
+
+![Excel2ldrGui screenshot](https://confluence.csiro.au/download/thumbnails/499941408/image2017-12-9_0-11-29.png?version=1&modificationDate=1512738690337&api=v2)
+
+The standalone executables have been precompiled for Windows and Mac. [Download here](https://confluence.csiro.au/display/VOCAB/Linked+Data+Registry+tools#LinkedDataRegistrytools-Excel2ldrGui)
+
+### Pre-requisites
+
+1. Access to a Linked Data Registry instance, e.g. http://registry.it.csiro.au/
+2. User account on a Linked Data Registry instance
+3. Stub registers created on Linked Data Registry instance
+
+
+## excel2ldr command line tool
 
 ### Quickstart
 
