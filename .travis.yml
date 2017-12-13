@@ -6,7 +6,7 @@ cache:
     - "$HOME/.cache/pip"
     - "$HOME/.pyenv"
 python:
-  - "3.6"
+  - "3.4"
 addons:
   apt:
      packages:
