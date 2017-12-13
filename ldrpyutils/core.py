@@ -49,7 +49,7 @@ def load_simple_file(excel_file,  user=None, passwd=None, emitFile=False, regist
                         )
     if verbose:
         print(status)
-    return True
+    return status['isSuccessful']
 
 def get_registerinfo(ws):
     if ws == False:
@@ -169,6 +169,7 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
     status = {
         "didEmitFile" : False,
         "didUpdateOnlineRegisters": False,
+        "isSuccessful": False,
     }
     if mode == 'single':
         register_id = reginfo_obj['id']
@@ -191,6 +192,11 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
                                                verbose=verbose
                                                )
                 status['didUpdateOnlineRegisters'] = resFlag
+                if resFlag == False:
+                    status['isSuccessful'] = False
+                else:
+                    status['isSuccessful'] = True
+
 
 
     else:
@@ -214,6 +220,10 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
                                                     verbose=verbose
                                                    )
                     status['didUpdateOnlineRegisters'] = resFlag
+                    if resFlag == False:
+                        status['isSuccessful'] = False
+                    else:
+                        status['isSuccessful'] = True
 
     return (g, status)
 

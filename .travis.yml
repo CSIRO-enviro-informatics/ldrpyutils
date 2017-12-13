@@ -7,17 +7,12 @@ cache:
     - "$HOME/.pyenv"
 python:
   - "3.4"
-addons:
-  apt:
-     packages:
-        - python-wxgtk2.8
 virtualenv:
   system_site_packages: true
 # command to install dependencies
 install:
   - pip install -r requirements.txt
-  - pip install -r requirements-installer.txt
   - pip install -e . | cat
 # command to run tests
-script: pyinstaller -y gui/Excel2ldrGui.spec
+script: pytest
   
