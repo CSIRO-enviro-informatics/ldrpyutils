@@ -49,7 +49,45 @@ def load_simple_file(excel_file,  user=None, passwd=None, emitFile=False, regist
                         )
     if verbose:
         print(status)
-    return True
+    return status['isSuccessful']
+
+def load_multi_register_file(excel_file, user=None, passwd=None, emitFile=False, registry_auth_url=None,
+                             updateOnlineRegisters=False,
+                             verbose=False):
+    wb = load_workbook(excel_file)
+    if verbose:
+        print(wb.get_sheet_names())
+
+    sheetsDict = {}
+    reginfo_ws = False
+    for sheet in wb:
+        sheetname = sheet.title
+        if sheetname == 'registerinfo':
+            reginfo_ws = sheet
+
+        else:
+            regitems_ws = sheet
+            sheetsDict[sheetname] = regitems_ws
+
+    #process the register info
+    reginfo_obj = get_registerinfo_multi_register(reginfo_ws)
+
+    #process the register items
+    regitems_obj = process_all_registeritems_in_dict(sheetsDict, verbose)
+
+    if verbose:
+        print(reginfo_obj)
+        print(regitems_obj)
+
+
+    #build the graph
+    (g, status) = build_graph_and_post(reginfo_obj, regitems_obj, user=user, passwd=passwd, mode='multi',
+                        emitFile=emitFile, registry_auth_url=registry_auth_url,
+                        updateOnlineRegisters=updateOnlineRegisters,
+                        verbose=verbose)
+    if verbose:
+        print(status)
+    return status['isSuccessful']
 
 def get_registerinfo(ws):
     if ws == False:
@@ -171,6 +209,7 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
     status = {
         "didEmitFile" : False,
         "didUpdateOnlineRegisters": False,
+        "isSuccessful": False,
     }
     if mode == 'single':
         register_id = reginfo_obj['id']
@@ -193,7 +232,10 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
                                                verbose=verbose
                                                )
                 status['didUpdateOnlineRegisters'] = resFlag
-
+                if resFlag == False:
+                    status['isSuccessful'] = False
+                else:
+                    status['isSuccessful'] = True
 
     else:
         #assume multi register
@@ -208,14 +250,18 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
             if emitFile:
                 filename = register_id + ".ttl"
                 g.serialize(filename, format="turtle")
-                if updateOnlineRegisters:
-                    #use the file to update the registers
-                    resFlag = post_update_to_online_register(register_id, register_url, data,
+            if updateOnlineRegisters:
+               #use the file to update the registers
+               resFlag = post_update_to_online_register(register_id, register_url, data,
                                                    registry_auth_url=registry_auth_url,
                                                    user=user, passwd=passwd,
                                                     verbose=verbose
                                                    )
-                    status['didUpdateOnlineRegisters'] = resFlag
+               status['didUpdateOnlineRegisters'] = resFlag
+               if resFlag == False:
+                  status['isSuccessful'] = False
+               else:
+                  status['isSuccessful'] = True
 
     return (g, status)
 
@@ -300,43 +346,6 @@ def post_update_to_online_register(register_id, register_url, data, registry_aut
                 print(r.status_code)
     return resFlag
 
-def load_multi_register_file(excel_file, user=None, passwd=None, emitFile=False, registry_auth_url=None,
-                             updateOnlineRegisters=False,
-                             verbose=False):
-    wb = load_workbook(excel_file)
-    if verbose:
-        print(wb.get_sheet_names())
-
-    sheetsDict = {}
-    reginfo_ws = False
-    for sheet in wb:
-        sheetname = sheet.title
-        if sheetname == 'registerinfo':
-            reginfo_ws = sheet
-
-        else:
-            regitems_ws = sheet
-            sheetsDict[sheetname] = regitems_ws
-
-    #process the register info
-    reginfo_obj = get_registerinfo_multi_register(reginfo_ws)
-
-    #process the register items
-    regitems_obj = process_all_registeritems_in_dict(sheetsDict, verbose)
-
-    if verbose:
-        print(reginfo_obj)
-        print(regitems_obj)
-
-
-    #build the graph
-    (g, status) = build_graph_and_post(reginfo_obj, regitems_obj, user=user, passwd=passwd, mode='multi',
-                        emitFile=emitFile, registry_auth_url=registry_auth_url,
-                        updateOnlineRegisters=updateOnlineRegisters,
-                        verbose=verbose)
-    if verbose:
-        print(status)
-    return True
 
 def get_registerinfo_multi_register(ws):
     if ws == False:

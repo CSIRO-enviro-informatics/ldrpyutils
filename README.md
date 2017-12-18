@@ -4,7 +4,33 @@ Python utils for the Linked Data Registry
 Persistent Link: http://doi.org/10.4225/08/5a2744c74d949 
 Attribution Statement: Yu, Jonathan (2017): ldrpyutils. v1. CSIRO. Software Collection. 10.4225/08/5a2744c74d949
 
-## excel2ldr
+![Travis build](https://travis-ci.org/CSIRO-LW-LD/ldrpyutils.svg?branch=master)
+
+
+## Excel2ldrGui Window-based tool
+
+Excel2ldrGui is a GUI front-end to Excel-to-LDR to help users upload and update content on a Linked Data Registry. 
+
+![Excel2ldrGui screenshot](https://confluence.csiro.au/download/thumbnails/499941408/image2017-12-9_0-11-29.png?version=1&modificationDate=1512738690337&api=v2)
+
+The standalone executables have been precompiled for Windows and Mac. [Download here](https://confluence.csiro.au/display/VOCAB/Linked+Data+Registry+tools#LinkedDataRegistrytools-Excel2ldrGui)
+
+### Pre-requisites
+
+1. Access to a Linked Data Registry instance, e.g. http://registry.it.csiro.au/
+2. User account on a Linked Data Registry instance
+3. Stub registers created on Linked Data Registry instance
+
+
+### Example Excel formats
+
+For Excel2ldrGui, you will need to use a simple excel format or a multiple-register excel format. Examples of these are providedin the  test-data repository. 
+
+1. Single register of vocabs (i.e. simple list) - see test-data/simple.xlsx
+2. Multiple registers of vocabs (i.e. one for each sheet) - see test-data/multi-register.xlsx 
+
+
+## excel2ldr command line tool
 
 ### Quickstart
 

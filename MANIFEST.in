@@ -1,1 +1,2 @@
 include ldrpyutils/data/prefixes.ttl
+include ldrpyutils/test/data/*.xlsx

@@ -10,3 +10,4 @@ rdflib==4.2.2
 requests==2.18.4
 urllib3==1.22
 wheel==0.24.0
+pytest
