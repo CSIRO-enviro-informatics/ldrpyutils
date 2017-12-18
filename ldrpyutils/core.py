@@ -132,7 +132,9 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
 
     ns_prefix_lookup = {
         "description" : 'dct',
+        "source": 'dct',
         "definition": 'skos',
+        "broader": 'skos',
         "notation": 'reg',
         "note": 'skos',
         "label" : 'rdfs',
