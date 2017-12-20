@@ -285,25 +285,60 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
     #g.add((register, DCT.description, Literal(register_info['description'])))
 
     # process items
-    arrConcepts = []
+    dictConcepts = {}
     items_data = register_items
+
     for item in items_data:
-        try:
-            concept = URIRef(str(item['id']))
-        except UnicodeEncodeError:
-            concept = URIRef((item['id']).encode('utf-8'))
-        g.add((concept, RDF.type, SKOS.Concept))
 
-        #g.add((register, RDFS.member, concept))
+        if item['id'] not in dictConcepts:
+            concept = create_concept_with_id(item['id'], g, prefix_idx)
+            dictConcepts[item['id']] = concept
+            #g.add((register, RDFS.member, concept))
+        else:
+            concept = dictConcepts[item['id']]
 
-        arrConcepts.append(concept)
+        #iterate over the fields in the register
         for key in item:
-            if key != 'id':
+            if key != 'id' and key != 'broader':
                 # get prefix
                 currPrefix = ns_prefix_lookup[key]
                 currNs = prefix_idx[currPrefix]
                 g.add((concept, currNs[key], Literal(item[key])))
+
+            # If this is a label field, register it as rdfs:label (default) and skos:prefLabel (addition)
+            if key == 'label':
+                g.add((concept, SKOS.prefLabel, Literal(item[key])))
+
+            if key == 'description':
+                g.add((concept, SKOS.definition, Literal(item[key])))
+
+            if key == 'broader':
+                #find the refering concept
+                broaderConceptId = item[key]
+                if(broaderConceptId is None or broaderConceptId == ''):
+                    continue
+
+                if broaderConceptId in dictConcepts:
+                    broaderConcept = dictConcepts[broaderConceptId]
+                    g.add((concept, SKOS.broader, broaderConcept))
+                else:
+                    #create it
+                    broaderConcept = create_concept_with_id(broaderConceptId, g, prefix_idx)
+                    dictConcepts[broaderConceptId] = broaderConcept
+                    g.add((concept, SKOS.broader, broaderConcept))
     return g
+
+def create_concept_with_id(id, graph, prefix_idx):
+    DCT = prefix_idx['dct']
+    SKOS = prefix_idx['skos']
+    REG = prefix_idx['reg']
+    try:
+        concept = URIRef(str(id))
+    except UnicodeEncodeError:
+        concept = URIRef(id.encode('utf-8'))
+    graph.add((concept, RDF.type, SKOS.Concept))
+    return concept
+
 
 def post_update_to_online_register(register_id, register_url, data, registry_auth_url=None, user=None, passwd=None,
                                    verbose=False):
