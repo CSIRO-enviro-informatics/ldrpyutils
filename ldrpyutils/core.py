@@ -175,6 +175,7 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
         "broader": 'skos',
         "notation": 'reg',
         "note": 'skos',
+        "altLabel": 'skos',
         "label" : 'rdfs',
     }
 
