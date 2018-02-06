@@ -313,6 +313,9 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
             if key == 'description':
                 g.add((concept, SKOS.definition, Literal(item[key])))
 
+            if key == 'notation':
+                g.add((concept, SKOS.notation, Literal(item[key])))
+
             if key == 'broader':
                 #find the refering concept
                 broaderConceptId = item[key]
