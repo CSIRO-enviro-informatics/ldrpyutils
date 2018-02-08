@@ -1,14 +1,18 @@
-from openpyxl import load_workbook
-import rdflib
-from rdflib import RDFS, RDF, URIRef, Literal
-from rdflib.namespace import NamespaceManager, Namespace
-import requests
-import json
 import argparse
+import json
+import logging
+import os
+import sys
+
 import pkg_resources
-import sys, os
+import rdflib
+import requests
+from openpyxl import load_workbook
+from rdflib import RDF, URIRef, Literal
+from rdflib.namespace import NamespaceManager, Namespace
 
 DATA_PATH = pkg_resources.resource_filename("ldrpyutils", 'data/')
+logging.basicConfig()
 
 def load_simple_file(excel_file,  user=None, passwd=None, emitFile=False, registry_auth_url=None,
                      updateOnlineRegisters=False,
