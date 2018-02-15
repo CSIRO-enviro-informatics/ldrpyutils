@@ -18,6 +18,7 @@ See ldrpyutils Github page for more info about the toolkit.<br/>
 (c) 2017 CSIRO Land and Water. Environmental Informatics Group. 
 </p>"""
 
+VERSION = 'v1.1'
 
 class HtmlWindow(wx.html.HtmlWindow):
     def __init__(self, parent, id, size=(600, 400)):
@@ -90,7 +91,10 @@ class Frame(wx.Frame):
         menuBar.Append(menu, "&Help")
         self.SetMenuBar(menuBar)
 
-        self.statusbar = self.CreateStatusBar()
+        self.statusbar = self.CreateStatusBar(2)
+        self.statusbar.SetStatusWidths([100, -1])
+
+        self.statusbar.SetStatusText(VERSION)
 
         # Main panel defined here
         panel = wx.Panel(self)
@@ -221,9 +225,9 @@ class Frame(wx.Frame):
                                           verbose=verbose
                                           )
                 if(resultFlag):
-                    self.statusbar.SetStatusText("Content successfully sent!")
+                    self.statusbar.SetStatusText("Content successfully sent!",1)
                 else:
-                    self.statusbar.SetStatusText("Content send failed.")
+                    self.statusbar.SetStatusText("Content send failed.",1)
         except requests.ConnectionError as e:
             #print("ConnectionError")
             self.displayConnectionProblemDlg()
