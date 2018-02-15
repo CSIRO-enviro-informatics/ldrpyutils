@@ -175,6 +175,7 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
         "broader": 'skos',
         "notation": 'reg',
         "note": 'skos',
+        "altLabel": 'skos',
         "label" : 'rdfs',
     }
 
@@ -311,6 +312,9 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
 
             if key == 'description':
                 g.add((concept, SKOS.definition, Literal(item[key])))
+
+            if key == 'notation':
+                g.add((concept, SKOS.notation, Literal(item[key])))
 
             if key == 'broader':
                 #find the refering concept
