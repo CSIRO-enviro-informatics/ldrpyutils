@@ -1,14 +1,20 @@
-from openpyxl import load_workbook
-import rdflib
-from rdflib import RDFS, RDF, URIRef, Literal
-from rdflib.namespace import NamespaceManager, Namespace
-import requests
-import json
 import argparse
+import json
+import logging
+import os
+import sys
+
 import pkg_resources
-import sys, os
+import rdflib
+import requests
+from openpyxl import load_workbook
+from rdflib import RDF, URIRef, Literal
+from rdflib.namespace import NamespaceManager, Namespace
+
+import validators
 
 DATA_PATH = pkg_resources.resource_filename("ldrpyutils", 'data/')
+logging.basicConfig()
 
 def load_simple_file(excel_file,  user=None, passwd=None, emitFile=False, registry_auth_url=None,
                      updateOnlineRegisters=False,
@@ -325,12 +331,20 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
                 if broaderConceptId in dictConcepts:
                     broaderConcept = dictConcepts[broaderConceptId]
                     g.add((concept, SKOS.broader, broaderConcept))
+                elif validate_url(broaderConceptId):
+                    broaderConcept = URIRef(broaderConceptId)
+                    g.add((concept, SKOS.broader, broaderConcept))
                 else:
                     #create it
                     broaderConcept = create_concept_with_id(broaderConceptId, g, prefix_idx)
                     dictConcepts[broaderConceptId] = broaderConcept
                     g.add((concept, SKOS.broader, broaderConcept))
     return g
+
+def validate_url(urlstring):
+    if urlstring.startswith("http"):
+        return validators.url(urlstring)
+    return False
 
 def create_concept_with_id(id, graph, prefix_idx):
     DCT = prefix_idx['dct']
