@@ -18,7 +18,7 @@ See ldrpyutils Github page for more info about the toolkit.<br/>
 (c) 2017 CSIRO Land and Water. Environmental Informatics Group. 
 </p>"""
 
-VERSION = 'v1.1'
+VERSION = 'v1.1.0'
 
 class HtmlWindow(wx.html.HtmlWindow):
     def __init__(self, parent, id, size=(600, 400)):
