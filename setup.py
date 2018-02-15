@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='ldrpyutils',
-    version='0.2.4',
+    version='1.0.0',
     packages=['ldrpyutils'],
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -22,7 +22,8 @@ setup(
     install_requires=[
                   'openpyxl',
                   'rdflib',
-                  'requests'
+                  'requests',
+                  'validators'
                         ],
     entry_points={
         'console_scripts': ['excel2ldr=ldrpyutils.core:excel2ldr'],
