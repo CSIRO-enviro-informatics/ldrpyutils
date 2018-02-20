@@ -261,9 +261,9 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
         for key in reginfo_obj:
             register_id = key
             register_url = reginfo_obj[key]['registry_location']
-            reglabel = reginfo_obj['label']
-            regdescription = reginfo_obj['description']
-            register_url = reginfo_obj['registry_location']
+            reglabel = reginfo_obj[key]['label']
+            regdescription = reginfo_obj[key]['description']
+            register_url = reginfo_obj[key]['registry_location']
 
             (parent_reg_url, sub_reg_id) = get_register_location_parent_and_subreg_url(register_url)
             subreg_graph = get_subregister_graph(sub_reg_id, reglabel, regdescription, prefix_idx, nsMgr)
