@@ -2,8 +2,9 @@ import argparse
 import json
 import logging
 import os
+import os.path
 import sys
-
+import urlparse
 import pkg_resources
 import rdflib
 import requests
@@ -165,6 +166,7 @@ def resource_path(relative):
             return os.path.join(sys._MEIPASS, relative)
         return os.path.join(relative)
 
+
 def build_graph_and_post(reginfo_obj, regitems_obj,
                 user=None, passwd=None, mode='single', emitFile=False,
                 registry_auth_url=None,
@@ -221,19 +223,28 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
     if mode == 'single':
         register_id = reginfo_obj['id']
         register_url = reginfo_obj['registry_location']
+        reglabel = reginfo_obj['label']
+        regdescription = reginfo_obj['description']
+        register_url = reginfo_obj['registry_location']
 
-        g = get_register_graph(register_id, reginfo_obj, regitems_obj[register_id], nsMgr, prefix_idx, ns_prefix_lookup)
+        (parent_reg_url, sub_reg_id) = get_register_location_parent_and_subreg_url(register_url)
+        subreg_graph = get_subregister_graph(sub_reg_id, reglabel, regdescription, prefix_idx, nsMgr)
+        subreg_data = subreg_graph.serialize(None, format='turtle')
+        if verbose:
+            print("Outputting register graph for " + sub_reg_id)
+            print(subreg_data)
+        g = get_register_graph(sub_reg_id, reginfo_obj, regitems_obj[sub_reg_id], nsMgr, prefix_idx, ns_prefix_lookup)
         data = g.serialize(None,format='turtle')
         if verbose:
-            print("Outputting graph for " + register_id)
+            print("Outputting graph for " + sub_reg_id)
             print(data)
         if emitFile or updateOnlineRegisters:
-            filename = register_id + ".ttl"
+            filename = sub_reg_id + ".ttl"
             g.serialize(filename, format="turtle")
             status['didEmitFile'] = True
             if updateOnlineRegisters:
                 # use the file to update the registers
-                resFlag = post_update_to_online_register(register_id, register_url, data,
+                resFlag = post_update_to_online_register(sub_reg_id, parent_reg_url, register_url, data, subreg_data,
                                                registry_auth_url=registry_auth_url,
                                                user=user, passwd=passwd,
                                                verbose=verbose
@@ -249,17 +260,26 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
         for key in reginfo_obj:
             register_id = key
             register_url = reginfo_obj[key]['registry_location']
-            g = get_register_graph(register_id, reginfo_obj[key], regitems_obj[key], nsMgr, prefix_idx, ns_prefix_lookup)
+            reglabel = reginfo_obj['label']
+            regdescription = reginfo_obj['description']
+            register_url = reginfo_obj['registry_location']
+
+            (parent_reg_url, sub_reg_id) = get_register_location_parent_and_subreg_url(register_url)
+            subreg_graph = get_subregister_graph(sub_reg_id, reglabel, regdescription, prefix_idx, nsMgr)
+            subreg_data = subreg_graph.serialize(None, format='turtle')
+
+
+            g = get_register_graph(sub_reg_id, reginfo_obj[key], regitems_obj[key], nsMgr, prefix_idx, ns_prefix_lookup)
             data = g.serialize(format='turtle')
             status['didEmitFile'] = True
             if verbose:
                 print(data)
             if emitFile:
-                filename = register_id + ".ttl"
+                filename = sub_reg_id + ".ttl"
                 g.serialize(filename, format="turtle")
             if updateOnlineRegisters:
                #use the file to update the registers
-               resFlag = post_update_to_online_register(register_id, register_url, data,
+               resFlag = post_update_to_online_register(sub_reg_id, parent_reg_url, register_url, data, subreg_data,
                                                    registry_auth_url=registry_auth_url,
                                                    user=user, passwd=passwd,
                                                     verbose=verbose
@@ -273,6 +293,38 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
     return (g, status)
 
 
+def get_register_location_parent_and_subreg_url(register_url):
+    #treat register_url as the final register i.e. subregister
+    parsed = urlparse.urlparse(register_url)
+    path = parsed.path
+    (head, tail) = os.path.split(path)
+    head_url = parsed.scheme + "://" + parsed.netloc + head
+    return (head_url, tail)
+
+
+def get_subregister_graph(regid, reglabel, regdescription, prefix_idx, nsMgr):
+    DCT = prefix_idx['dct']
+    RDFS = prefix_idx['rdfs']
+    RDF = prefix_idx['rdf']
+    REG = prefix_idx['reg']
+    subreg = None
+    graph = rdflib.Graph(namespace_manager=nsMgr)
+    try:
+        subreg = URIRef(str(regid))
+    except UnicodeEncodeError:
+        subreg = URIRef(regid.encode('utf-8'))
+    graph.add((subreg, RDF.type, REG.Register))
+    graph.add((subreg, RDFS.label, Literal(str(reglabel))))
+    graph.add((subreg, DCT.description, Literal(str(regdescription))))
+    return graph
+    """
+    <register1>       a reg:Register ;
+        rdfs:label       "Register 1"^^xsd:string ;
+        dct:description  "Register containing a set of example concepts"^^xsd:string ;
+        rdfs:member      reg1:conceptB , reg1:conceptC , reg1:conceptD , reg1:element-conf-report ;
+.
+    :return: 
+    """
 
 def get_register_graph(register_id, register_info, register_items, nsMgr, prefix_idx, ns_prefix_lookup):
     DCT = prefix_idx['dct']
@@ -351,9 +403,8 @@ def create_concept_with_id(id, graph, prefix_idx):
     graph.add((concept, RDF.type, SKOS.Concept))
     return concept
 
-
-def post_update_to_online_register(register_id, register_url, data, registry_auth_url=None, user=None, passwd=None,
-                                   verbose=False):
+def post_update_to_online_register(sub_reg_id, parent_reg_url, register_url, data, subreg_data, registry_auth_url=None, user=None, passwd=None,
+                                   verbose=False, create_register_if_not_exists=True):
     s = requests.Session()
     r = s.post(registry_auth_url, data={'userid': user, 'password': passwd})
 
@@ -365,18 +416,26 @@ def post_update_to_online_register(register_id, register_url, data, registry_aut
         print(r.cookies.get_dict())
 
     if r.status_code == 200:
-        #upload the data
+        #successfully logged in - so upload the data
         url = register_url
         headers = {"Content-Type": "text/turtle"}
         if verbose:
             print(s.cookies.get_dict())
+
+        if create_register_if_not_exists:
+            #create the register if not exists
+            print("Creating register " + sub_reg_id + " in " + parent_reg_url)
+            r = s.post(parent_reg_url, data=subreg_data, headers=headers)
+            if verbose:
+                print(r.status_code)
+                #print(json.dumps(r.json))
 
         r=s.post(url, data=data, headers=headers)
         if verbose:
             print(r.status_code)
         if r.status_code == 201:
                 resFlag = True
-                print("Successfully created items in register '" + register_id + "'")
+                print("Successfully created items in register '" + sub_reg_id + "'")
         elif r.status_code == 403:
             #force update
             url = register_url + "?edit"
@@ -388,7 +447,7 @@ def post_update_to_online_register(register_id, register_url, data, registry_aut
 
             if r.status_code == 204:
                 resFlag = True
-                print("Successfully updated register '" + register_id + "'")
+                print("Successfully updated register '" + sub_reg_id + "'")
             if verbose:
                 print(r.status_code)
     return resFlag
