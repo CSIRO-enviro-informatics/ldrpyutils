@@ -331,14 +331,17 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
                 if broaderConceptId in dictConcepts:
                     broaderConcept = dictConcepts[broaderConceptId]
                     g.add((concept, SKOS.broader, broaderConcept))
+                    g.add((broaderConcept, SKOS.narrower, concept))
                 elif validate_url(broaderConceptId):
                     broaderConcept = URIRef(broaderConceptId)
                     g.add((concept, SKOS.broader, broaderConcept))
+                    g.add((broaderConcept, SKOS.narrower, concept))
                 else:
                     #create it
                     broaderConcept = create_concept_with_id(broaderConceptId, g, prefix_idx)
                     dictConcepts[broaderConceptId] = broaderConcept
                     g.add((concept, SKOS.broader, broaderConcept))
+                    g.add((broaderConcept, SKOS.narrower, concept))
     return g
 
 def validate_url(urlstring):
