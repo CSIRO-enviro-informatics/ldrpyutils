@@ -279,17 +279,8 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
     SKOS = prefix_idx['skos']
     REG = prefix_idx['reg']
 
-    #register = URIRef(register_id)
-    #registerNsStr = URIRef(register_id + "/")
-    #registerNs = Namespace(registerNsStr)
-    #nsMgr.bind(register_id, registerNsStr)
-
     g = rdflib.Graph(namespace_manager=nsMgr)
 
-    #g.add((register, RDF.type, URIRef(REG.Register)))
-    #g.add((register, RDF.type, SKOS.Collection))
-    #g.add((register, RDFS.label, Literal(register_info['label'])))
-    #g.add((register, DCT.description, Literal(register_info['description'])))
 
     # process items
     dictConcepts = {}
@@ -300,7 +291,6 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
         if item['id'] not in dictConcepts:
             concept = create_concept_with_id(item['id'], g, prefix_idx)
             dictConcepts[item['id']] = concept
-            #g.add((register, RDFS.member, concept))
         else:
             concept = dictConcepts[item['id']]
 
@@ -310,7 +300,8 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
                 # get prefix
                 currPrefix = ns_prefix_lookup[key]
                 currNs = prefix_idx[currPrefix]
-                g.add((concept, currNs[key], Literal(item[key])))
+                if item[key] != None:
+                    g.add((concept, currNs[key], Literal(item[key])))
 
             # If this is a label field, register it as rdfs:label (default) and skos:prefLabel (addition)
             if key == 'label':
