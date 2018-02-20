@@ -4,15 +4,16 @@ import logging
 import os
 import os.path
 import sys
-import urlparse
+from urllib.parse import urlparse
+
+
 import pkg_resources
 import rdflib
 import requests
+import validators
 from openpyxl import load_workbook
 from rdflib import RDF, URIRef, Literal
 from rdflib.namespace import NamespaceManager, Namespace
-
-import validators
 
 DATA_PATH = pkg_resources.resource_filename("ldrpyutils", 'data/')
 logging.basicConfig()
@@ -295,7 +296,7 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
 
 def get_register_location_parent_and_subreg_url(register_url):
     #treat register_url as the final register i.e. subregister
-    parsed = urlparse.urlparse(register_url)
+    parsed = urlparse(register_url)
     path = parsed.path
     (head, tail) = os.path.split(path)
     head_url = parsed.scheme + "://" + parsed.netloc + head
