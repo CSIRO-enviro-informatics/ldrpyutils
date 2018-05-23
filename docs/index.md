@@ -11,7 +11,7 @@ Preparing and uploading vocabulary content to a [Linked Data Registry](http://uk
 
 `Excel2LDR` is a small component that streamlines the creation and revision of vocabulary content on any Linked Data Registry (LDR) service based on Excel templates that are compatible with it. It provides a GUI front-end to help users upload and update content on the LDR. We currently only support Windows. (Please [raise a Github issue](https://github.com/CSIRO-enviro-informatics/ldrpyutils/issues/new) if you would like a Mac version!)
 
-![Excel2ldrGui screenshot](https://confluence.csiro.au/download/thumbnails/499941408/image2017-12-9_0-11-29.png?version=1&modificationDate=1512738690337&api=v2)
+![Excel2ldr screenshot](https://confluence.csiro.au/download/thumbnails/499941408/image2017-12-9_0-11-29.png?version=1&modificationDate=1512738690337&api=v2)
 
 Downloads:
 * Excel2LDR for Windows. [Download here](https://confluence.csiro.au/download/attachments/499941408/Excel2ldrGui.exe?version=6&modificationDate=1519124121550&api=v2)
@@ -25,11 +25,34 @@ Downloads:
 
 Steps:
 1. Download the Excel2LDR Excel Template - see [simple.xlsx](https://github.com/CSIRO-LW-LD/ldrpyutils/raw/master/test-data/simple.xlsx)
+
 2. Extend this with your content and save the file
+
+Using the simple template, fill in details of the 'registerinfo' sheet with appropriate values in Column B. This info includes an id, a descriptive (short) label, a description (long form), the URL for the register location, source notes, and maintainer.
+
+![Excel template registerinfo](https://confluence.csiro.au/download/attachments/499941408/excel2ldr-template0.JPG?version=1&modificationDate=1527058110238&api=v2)
+
+
+In the second Excel sheet, extend/customise the content to include your vocabulary terms. Each row represents a term or SKOS concept.
+
+The 'id' field is special as it mints the unique identifier for the concept in the register - this is mandatory and must be unique! 
+
+Fill in all the other fields, noting that they are optional (but it would be useful if they were filled out!).
+
+The 'broader' field provides users with the ability to link terms/concepts to broader concepts. The values expected are either a) the id of other concepts in the sheet; or b) a URL which represents the broader concept (perhaps from another register).
+
+![Excel template content](https://confluence.csiro.au/download/attachments/499941408/excel2ldr-template1.JPG?version=1&modificationDate=1527058110310&api=v2)
+
 3. Download the Excel2LDR tool 
+
 4. Open the Excel2LDR application
+
 5. Enter in the Excel file and your account username and password
+
+![Excel template content](https://confluence.csiro.au/download/thumbnails/499941408/excel2ldr-screenshot.JPG?version=1&modificationDate=1527059344860&api=v2)
+
 6. Submit and Done!
+
 
 ### Excel templates
 
