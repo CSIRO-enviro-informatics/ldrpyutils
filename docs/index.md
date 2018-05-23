@@ -49,7 +49,7 @@ The 'broader' field provides users with the ability to link terms/concepts to br
 
 5. Enter in the Excel file and your account username and password
 
-![Excel template content](https://confluence.csiro.au/download/thumbnails/499941408/excel2ldr-screenshot.JPG?version=1&modificationDate=1527059344860&api=v2)
+![Excel template content](https://confluence.csiro.au/download/attachments/499941408/image2017-12-9_0-11-29.png?version=1&modificationDate=1512738690337&api=v2)
 
 6. Submit and Done!
 
