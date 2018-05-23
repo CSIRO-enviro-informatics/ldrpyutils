@@ -11,6 +11,8 @@ Preparing and uploading vocabulary content to a [Linked Data Registry](http://uk
 
 `Excel2LDR` is a small component that streamlines the creation and revision of vocabulary content on any Linked Data Registry (LDR) service based on Excel templates that are compatible with it. It provides a GUI front-end to help users upload and update content on the LDR. We currently only support Windows. (Please [raise a Github issue](https://github.com/CSIRO-enviro-informatics/ldrpyutils/issues/new) if you would like a Mac version!)
 
+![Excel2ldrGui screenshot](https://confluence.csiro.au/download/thumbnails/499941408/image2017-12-9_0-11-29.png?version=1&modificationDate=1512738690337&api=v2)
+
 Downloads:
 * Excel2LDR for Windows. [Download here](https://confluence.csiro.au/download/attachments/499941408/Excel2ldrGui.exe?version=6&modificationDate=1519124121550&api=v2)
 
