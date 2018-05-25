@@ -1,5 +1,5 @@
 # ldrpyutils
-Python utils for the Linked Data Registry
+Python utils for the Linked Data Registry (https://csiro-enviro-informatics.github.io/ldrpyutils)
 
 Persistent Link: http://doi.org/10.4225/08/5a2744c74d949 
 Attribution Statement: Yu, Jonathan (2017): ldrpyutils. v1. CSIRO. Software Collection. 10.4225/08/5a2744c74d949
@@ -8,6 +8,7 @@ Attribution Statement: Yu, Jonathan (2017): ldrpyutils. v1. CSIRO. Software Coll
 
 
 ## Excel2ldrGui Window-based tool
+(https://csiro-enviro-informatics.github.io/ldrpyutils/index#excel2ldr)
 
 Excel2ldrGui is a GUI front-end to Excel-to-LDR to help users upload and update content on a Linked Data Registry. 
 
