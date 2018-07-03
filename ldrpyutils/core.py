@@ -4,8 +4,12 @@ import logging
 import os
 import os.path
 import sys
-from urllib.parse import urlparse
+import re
 
+try:
+    from urllib.parse import urlparse
+except ImportError:
+     from urlparse import urlparse
 
 import pkg_resources
 import rdflib
@@ -329,7 +333,11 @@ def get_subregister_graph(regid, reglabel, regdescription, prefix_idx, nsMgr):
 
 
 def processMultilineCell(data):
-    return str.splitlines(data)
+    print("Applying regex")
+    arr = re.split(r'[\n\r]+',data)
+    print(arr)
+    return arr
+    #return str.splitlines(data)
 
 
 def get_register_graph(register_id, register_info, register_items, nsMgr, prefix_idx, ns_prefix_lookup):

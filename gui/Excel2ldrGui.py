@@ -15,10 +15,10 @@ import requests
 
 aboutText = """<p>Excel to LDR is a client tool for uploading/updating registers on the Linked Data Registry.
 See ldrpyutils Github page for more info about the toolkit.<br/>
-(c) 2017 CSIRO Land and Water. Environmental Informatics Group. 
+(c) 2017-2018 CSIRO Land and Water. Environmental Informatics Group. 
 </p>"""
 
-VERSION = 'v1.1.2'
+VERSION = 'v1.1.3'
 
 class HtmlWindow(wx.html.HtmlWindow):
     def __init__(self, parent, id, size=(600, 400)):
