@@ -327,10 +327,17 @@ def get_subregister_graph(regid, reglabel, regdescription, prefix_idx, nsMgr):
     :return: 
     """
 
+
+def processMultilineCell(data):
+    return str.splitlines(data)
+
+
 def get_register_graph(register_id, register_info, register_items, nsMgr, prefix_idx, ns_prefix_lookup):
     DCT = prefix_idx['dct']
     SKOS = prefix_idx['skos']
     REG = prefix_idx['reg']
+    RDFS = prefix_idx['rdfs']
+
 
     g = rdflib.Graph(namespace_manager=nsMgr)
 
@@ -349,16 +356,26 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
 
         #iterate over the fields in the register
         for key in item:
-            if key != 'id' and key != 'broader':
+            #and create kvp's for any header
+            if key != 'id' and key != 'broader' and key != 'altLabel':
                 # get prefix
                 currPrefix = ns_prefix_lookup[key]
                 currNs = prefix_idx[currPrefix]
                 if item[key] != None:
                     g.add((concept, currNs[key], Literal(item[key])))
 
+            #handle any special cases below
+
             # If this is a label field, register it as rdfs:label (default) and skos:prefLabel (addition)
             if key == 'label':
                 g.add((concept, SKOS.prefLabel, Literal(item[key])))
+
+            if key == 'altLabel':
+                arrValues = processMultilineCell(item[key])
+                for v in arrValues:
+                    print("AltLabel: " + v)
+                    g.add((concept, SKOS.altLabel, Literal(v)))
+
 
             if key == 'description':
                 g.add((concept, SKOS.definition, Literal(item[key])))
