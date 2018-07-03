@@ -1,0 +1,6 @@
+{
+  "registry_url" : "http://registry.it.csiro.au",
+  "emitFile" : true,
+  "updateOnlineRegisters" : true,
+  "verbose" : false
+}
