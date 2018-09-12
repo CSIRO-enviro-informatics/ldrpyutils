@@ -25,7 +25,7 @@ logging.basicConfig()
 def load_simple_file(excel_file,  user=None, passwd=None, emitFile=False, registry_auth_url=None,
                      updateOnlineRegisters=False,
                      verbose=False):
-    wb = load_workbook(excel_file)
+    wb = load_workbook(excel_file, data_only=True) #last computed value
 
     if verbose:
         print(wb.get_sheet_names())
@@ -66,7 +66,7 @@ def load_simple_file(excel_file,  user=None, passwd=None, emitFile=False, regist
 def load_multi_register_file(excel_file, user=None, passwd=None, emitFile=False, registry_auth_url=None,
                              updateOnlineRegisters=False,
                              verbose=False):
-    wb = load_workbook(excel_file)
+    wb = load_workbook(excel_file, data_only=True) #last computed value
     if verbose:
         print(wb.get_sheet_names())
 
@@ -333,11 +333,15 @@ def get_subregister_graph(regid, reglabel, regdescription, prefix_idx, nsMgr):
 
 
 def processMultilineCell(data):
+    if data is None:
+        return None
+
     print("Applying regex")
     arr = re.split(r'[\n\r]+',data)
     print(arr)
     return arr
-    #return str.splitlines(data)
+
+        #return str.splitlines(data)
 
 
 def get_register_graph(register_id, register_info, register_items, nsMgr, prefix_idx, ns_prefix_lookup):
@@ -353,64 +357,71 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
     # process items
     dictConcepts = {}
     items_data = register_items
+    try:
 
-    for item in items_data:
+        for item in items_data:
+            concept = None
+            if item['id'] not in dictConcepts:
+                concept = create_concept_with_id(item['id'], g, prefix_idx)
+                dictConcepts[item['id']] = concept
+            else:
+                concept = dictConcepts[item['id']]
 
-        if item['id'] not in dictConcepts:
-            concept = create_concept_with_id(item['id'], g, prefix_idx)
-            dictConcepts[item['id']] = concept
-        else:
-            concept = dictConcepts[item['id']]
+            #iterate over the fields in the register
+            for key in item:
+                #and create kvp's for any header
+                if key != 'id' and key != 'broader' and key != 'altLabel':
+                    # get prefix
+                    currPrefix = ns_prefix_lookup[key]
+                    currNs = prefix_idx[currPrefix]
+                    if item[key] != None:
+                        g.add((concept, currNs[key], Literal(item[key])))
 
-        #iterate over the fields in the register
-        for key in item:
-            #and create kvp's for any header
-            if key != 'id' and key != 'broader' and key != 'altLabel':
-                # get prefix
-                currPrefix = ns_prefix_lookup[key]
-                currNs = prefix_idx[currPrefix]
-                if item[key] != None:
-                    g.add((concept, currNs[key], Literal(item[key])))
+                #handle any special cases below
 
-            #handle any special cases below
+                # If this is a label field, register it as rdfs:label (default) and skos:prefLabel (addition)
+                if key == 'label':
+                    g.add((concept, SKOS.prefLabel, Literal(item[key])))
 
-            # If this is a label field, register it as rdfs:label (default) and skos:prefLabel (addition)
-            if key == 'label':
-                g.add((concept, SKOS.prefLabel, Literal(item[key])))
-
-            if key == 'altLabel':
-                arrValues = processMultilineCell(item[key])
-                for v in arrValues:
-                    print("AltLabel: " + v)
-                    g.add((concept, SKOS.altLabel, Literal(v)))
+                if key == 'altLabel':
+                    arrValues = processMultilineCell(item[key])
+                    if arrValues is not None:
+                        for v in arrValues:
+                            print("AltLabel: " + v)
+                            g.add((concept, SKOS.altLabel, Literal(v)))
 
 
-            if key == 'description':
-                g.add((concept, SKOS.definition, Literal(item[key])))
+                if key == 'description':
+                    g.add((concept, SKOS.definition, Literal(item[key])))
 
-            if key == 'notation':
-                g.add((concept, SKOS.notation, Literal(item[key])))
+                if key == 'notation':
+                    g.add((concept, SKOS.notation, Literal(item[key])))
 
-            if key == 'broader':
-                #find the refering concept
-                broaderConceptId = item[key]
-                if(broaderConceptId is None or broaderConceptId == ''):
-                    continue
+                if key == 'broader':
+                    #find the refering concept
+                    broaderConceptId = item[key]
+                    if(broaderConceptId is None or broaderConceptId == ''):
+                        continue
 
-                if broaderConceptId in dictConcepts:
-                    broaderConcept = dictConcepts[broaderConceptId]
-                    g.add((concept, SKOS.broader, broaderConcept))
-                    g.add((broaderConcept, SKOS.narrower, concept))
-                elif validate_url(broaderConceptId):
-                    broaderConcept = URIRef(broaderConceptId)
-                    g.add((concept, SKOS.broader, broaderConcept))
-                    g.add((broaderConcept, SKOS.narrower, concept))
-                else:
-                    #create it
-                    broaderConcept = create_concept_with_id(broaderConceptId, g, prefix_idx)
-                    dictConcepts[broaderConceptId] = broaderConcept
-                    g.add((concept, SKOS.broader, broaderConcept))
-                    g.add((broaderConcept, SKOS.narrower, concept))
+                    if broaderConceptId in dictConcepts:
+                        broaderConcept = dictConcepts[broaderConceptId]
+                        g.add((concept, SKOS.broader, broaderConcept))
+                        g.add((broaderConcept, SKOS.narrower, concept))
+                    elif validate_url(broaderConceptId):
+                        broaderConcept = URIRef(broaderConceptId)
+                        g.add((concept, SKOS.broader, broaderConcept))
+                        g.add((broaderConcept, SKOS.narrower, concept))
+                    else:
+                        #create it
+                        broaderConcept = create_concept_with_id(broaderConceptId, g, prefix_idx)
+                        dictConcepts[broaderConceptId] = broaderConcept
+                        g.add((concept, SKOS.broader, broaderConcept))
+                        g.add((broaderConcept, SKOS.narrower, concept))
+
+    except ValueError as err:
+        print(err)
+        raise
+
     return g
 
 def validate_url(urlstring):
@@ -422,10 +433,21 @@ def create_concept_with_id(id, graph, prefix_idx):
     DCT = prefix_idx['dct']
     SKOS = prefix_idx['skos']
     REG = prefix_idx['reg']
+    test_graph = rdflib.Graph()
+    if id is None:
+        raise ValueError("id cannot be empty")
     try:
+        #check that id is able to form a valid URI
         concept = URIRef(str(id))
+        test_graph.add((concept, RDF.type, SKOS.Concept))
+
+        #test that we can serialize the statement - if so, all good; else it means URI is broken
+        test_graph.serialize(format='n3')
     except UnicodeEncodeError:
         concept = URIRef(id.encode('utf-8'))
+    except Exception:
+        #assume we could not serialise the format
+        raise ValueError("Error in trying to form a URI with '%s'." % id)
     graph.add((concept, RDF.type, SKOS.Concept))
     return concept
 
