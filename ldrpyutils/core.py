@@ -442,7 +442,7 @@ def create_concept_with_id(id, graph, prefix_idx):
         test_graph.add((concept, RDF.type, SKOS.Concept))
 
         #test that we can serialize the statement - if so, all good; else it means URI is broken
-        test_graph.serialize(format='n3')
+        test_graph.serialize(format='turtle')
     except UnicodeEncodeError:
         concept = URIRef(id.encode('utf-8'))
     except Exception:
