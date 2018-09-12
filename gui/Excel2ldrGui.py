@@ -73,6 +73,8 @@ class Frame(wx.Frame):
 
     def __init__(self, title):
         self.setupConfigs()
+        self.isMulti = False
+
         wx.Frame.__init__(self, None, title=title, pos=(150, 150), size=(500, 500))
         self.Bind(wx.EVT_CLOSE, self.OnClose)
 
@@ -158,8 +160,8 @@ class Frame(wx.Frame):
     # Event function: on checked
     def onChecked(self, e):
         cb = e.GetEventObject()
-        #print cb.GetLabel(), ' is clicked', cb.GetValue()
-        if(cb.GetValue() == 'Multi-register'):
+        print(cb.GetLabel(), ' is clicked', cb.GetValue())
+        if(cb.GetLabel() == 'Multi-register'):
             self.isMulti = cb.GetValue()
 
     # Event: on file selected
@@ -199,6 +201,8 @@ class Frame(wx.Frame):
         verbose = self.config['verbose']
 
         registry_auth_url = registry_url + "/system/security/apilogin"
+        #print(isMulti)
+        #print(self.isMulti)
 
         if filepath is None:
             self.displayNoFileSelectedProblemDlg()
@@ -206,6 +210,7 @@ class Frame(wx.Frame):
 
         #print(user)
         #print(passwd)
+
         if user == '' or passwd == ''\
                 or user == None or passwd == None:
             self.displayUserCredentialsProblemDlg()
