@@ -362,6 +362,15 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
         for item in items_data:
             concept = None
             if item['id'] not in dictConcepts:
+                if(item['id'] is None):
+                    #check if this is blank row
+                    print("id column is empty. checking if row is empty.")
+                    if 'label' in item and item['label'] is None:
+                        #confirmed that this is none, so skip this item
+                        print("row is empty. skipping...")
+                        continue
+                    else:
+                        print("row is not empty. attempting to create concept...")
                 concept = create_concept_with_id(item['id'], g, prefix_idx)
                 dictConcepts[item['id']] = concept
             else:
@@ -413,6 +422,8 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
                         g.add((broaderConcept, SKOS.narrower, concept))
                     else:
                         #create it
+                        if broaderConceptId is None:
+                            print("hello")
                         broaderConcept = create_concept_with_id(broaderConceptId, g, prefix_idx)
                         dictConcepts[broaderConceptId] = broaderConcept
                         g.add((concept, SKOS.broader, broaderConcept))
