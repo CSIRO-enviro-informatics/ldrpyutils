@@ -18,7 +18,7 @@ See ldrpyutils Github page for more info about the toolkit.<br/>
 (c) 2017-2018 CSIRO Land and Water. Environmental Informatics Group. 
 </p>"""
 
-VERSION = 'v1.1.5'
+VERSION = 'v1.1.6'
 
 class HtmlWindow(wx.html.HtmlWindow):
     def __init__(self, parent, id, size=(600, 400)):
@@ -199,7 +199,7 @@ class Frame(wx.Frame):
         registry_url = self.config['registry_url']
         updateOnlineRegisters = self.config['updateOnlineRegisters']
         verbose = self.config['verbose']
-
+        
         registry_auth_url = registry_url + "/system/security/apilogin"
         #print(isMulti)
         #print(self.isMulti)
