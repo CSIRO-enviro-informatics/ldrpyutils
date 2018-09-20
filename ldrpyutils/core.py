@@ -362,6 +362,15 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
         for item in items_data:
             concept = None
             if item['id'] not in dictConcepts:
+                if(item['id'] is None):
+                    #check if this is blank row
+                    print("id column is empty. checking if row is empty.")
+                    if 'label' in item and item['label'] is None:
+                        #confirmed that this is none, so skip this item
+                        print("row is empty. skipping...")
+                        continue
+                    else:
+                        print("row is not empty. attempting to create concept...")
                 concept = create_concept_with_id(item['id'], g, prefix_idx)
                 dictConcepts[item['id']] = concept
             else:
@@ -413,10 +422,16 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
                         g.add((broaderConcept, SKOS.narrower, concept))
                     else:
                         #create it
+                        if broaderConceptId is None:
+                            print("hello")
                         broaderConcept = create_concept_with_id(broaderConceptId, g, prefix_idx)
                         dictConcepts[broaderConceptId] = broaderConcept
+
+                        # add relations
                         g.add((concept, SKOS.broader, broaderConcept))
                         g.add((broaderConcept, SKOS.narrower, concept))
+                        # add placeholder label for the broader concept
+                        g.add((broaderConcept, RDFS.label, Literal(str(broaderConceptId))))
 
     except ValueError as err:
         print(err)
@@ -436,18 +451,25 @@ def create_concept_with_id(id, graph, prefix_idx):
     test_graph = rdflib.Graph()
     if id is None:
         raise ValueError("id cannot be empty")
+
+    #trim the id
+    cleaned_id = str(id).strip()
+    #check if id has any special characters - '/', '\', ':'
+    if re.search('/|:/\\\\| |,|;', cleaned_id):
+        raise ValueError("Error in id ('" + cleaned_id + "'). id cannot have spaces or special characters like '/', ':', '\\'.")
+
     try:
         #check that id is able to form a valid URI
-        concept = URIRef(str(id))
+        concept = URIRef(str(cleaned_id))
         test_graph.add((concept, RDF.type, SKOS.Concept))
 
         #test that we can serialize the statement - if so, all good; else it means URI is broken
         test_graph.serialize(format='turtle')
     except UnicodeEncodeError:
-        concept = URIRef(id.encode('utf-8'))
+        concept = URIRef(cleaned_id.encode('utf-8'))
     except Exception:
         #assume we could not serialise the format
-        raise ValueError("Error in trying to form a URI with '%s'." % id)
+        raise ValueError("Error in trying to form a URI with '%s'." % cleaned_id)
     graph.add((concept, RDF.type, SKOS.Concept))
     return concept
 
@@ -498,6 +520,10 @@ def post_update_to_online_register(sub_reg_id, parent_reg_url, register_url, dat
                 print("Successfully updated register '" + sub_reg_id + "'")
             if verbose:
                 print(r.status_code)
+        if r.status_code == 400:
+            print("Failed to post content to LDR.")
+            print(r.reason)
+            print(r.json)
     return resFlag
 
 
