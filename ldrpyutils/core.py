@@ -189,6 +189,7 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
         "notation": 'reg',
         "note": 'skos',
         "altLabel": 'skos',
+        "hiddenLabel": 'skos',
         "label" : 'rdfs',
     }
 
@@ -379,7 +380,7 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
             #iterate over the fields in the register
             for key in item:
                 #and create kvp's for any header
-                if key != 'id' and key != 'broader' and key != 'altLabel':
+                if key != 'id' and key != 'broader' and key != 'altLabel' and key != 'hiddenLabel':
                     # get prefix
                     currPrefix = ns_prefix_lookup[key]
                     currNs = prefix_idx[currPrefix]
@@ -398,6 +399,13 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
                         for v in arrValues:
                             print("AltLabel: " + v)
                             g.add((concept, SKOS.altLabel, Literal(v)))
+
+                if key == 'hiddenLabel':
+                    arrValues = processMultilineCell(item[key])
+                    if arrValues is not None:
+                        for v in arrValues:
+                            print("HiddenLabel: " + v)
+                            g.add((concept, SKOS.hiddenLabel, Literal(v)))
 
 
                 if key == 'description':
