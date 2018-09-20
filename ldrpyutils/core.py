@@ -453,7 +453,7 @@ def create_concept_with_id(id, graph, prefix_idx):
         raise ValueError("id cannot be empty")
 
     #trim the id
-    cleaned_id = id.strip()
+    cleaned_id = str(id).strip()
     #check if id has any special characters - '/', '\', ':'
     if re.search('/|:/\\\\| |,|;', cleaned_id):
         raise ValueError("Error in id ('" + cleaned_id + "'). id cannot have spaces or special characters like '/', ':', '\\'.")

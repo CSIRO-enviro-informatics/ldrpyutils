@@ -199,7 +199,7 @@ class Frame(wx.Frame):
         registry_url = self.config['registry_url']
         updateOnlineRegisters = self.config['updateOnlineRegisters']
         verbose = self.config['verbose']
-        
+
         registry_auth_url = registry_url + "/system/security/apilogin"
         #print(isMulti)
         #print(self.isMulti)
