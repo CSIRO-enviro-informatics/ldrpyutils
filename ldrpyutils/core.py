@@ -379,6 +379,8 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
 
             #iterate over the fields in the register
             for key in item:
+                if key == None:
+                    continue
                 #and create kvp's for any header
                 if key != 'id' and key != 'broader' and key != 'altLabel' and key != 'hiddenLabel':
                     # get prefix
@@ -448,8 +450,9 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
     return g
 
 def validate_url(urlstring):
-    if urlstring.startswith("http"):
-        return validators.url(urlstring)
+    curr = str(urlstring)
+    if curr.startswith("http"):
+        return validators.url(curr)
     return False
 
 def create_concept_with_id(id, graph, prefix_idx):
