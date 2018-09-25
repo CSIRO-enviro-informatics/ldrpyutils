@@ -57,7 +57,7 @@ $ excel2ldr --user username --pass passwd examples/simple.xlsx
 #### Windows Pre-requisites
 
 ```
-1. Ensure Python 2.7 and pip is installed
+1. Ensure Python 3.4+ and pip is installed
 2. Ensure Python and pip is added to the PATH environment variable
 ```
 
@@ -78,7 +78,7 @@ $ git clone https://github.com/CSIRO-LW-LD/ldrpyutils.git
 $ cd ldrpyutils
 
 # (optional) setup a virtualenv
-$ virtualenv venv
+$ virtualenv -p python3 venv
 $ source venv/bin/activate
 $ pip install -r requirements.txt 
 
