@@ -190,6 +190,7 @@ def build_graph_and_post(reginfo_obj, regitems_obj,
         "note": 'skos',
         "altLabel": 'skos',
         "hiddenLabel": 'skos',
+        "exactMatch": 'skos',
         "label" : 'rdfs',
     }
 
@@ -377,12 +378,15 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
             else:
                 concept = dictConcepts[item['id']]
 
+            listSkosLexicalProps = ['altLabel', 'hiddenLabel', ]
+            listSkosRelProps = ['broader', 'related', 'semanticRelation',
+                                'mappingRelation', 'closeMatch', 'exactMatch', 'broadMatch', 'narrowMatch', 'relatedMatch']
             #iterate over the fields in the register
             for key in item:
                 if key == None:
                     continue
                 #and create kvp's for any header
-                if key != 'id' and key != 'broader' and key != 'altLabel' and key != 'hiddenLabel':
+                if key != 'id' and (key not in listSkosLexicalProps) and (key not in listSkosRelProps):
                     # get prefix
                     currPrefix = ns_prefix_lookup[key]
                     currNs = prefix_idx[currPrefix]
@@ -442,6 +446,15 @@ def get_register_graph(register_id, register_info, register_items, nsMgr, prefix
                         g.add((broaderConcept, SKOS.narrower, concept))
                         # add placeholder label for the broader concept
                         g.add((broaderConcept, RDFS.label, Literal(str(broaderConceptId))))
+                elif key in listSkosRelProps:
+                    uri = item[key]
+                    if(uri is None or uri == ''):
+                        continue
+
+                    currProp = rdflib.term.URIRef(SKOS[key])
+                    if validate_url(uri):
+                        currConcept = URIRef(uri)
+                        g.add((concept, currProp, currConcept))
 
     except ValueError as err:
         print(err)
