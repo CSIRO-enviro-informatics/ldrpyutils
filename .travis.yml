@@ -23,8 +23,10 @@ deploy:
       secure: am8m/v8Uy6Wx6MDXMqkQsiSimZYcu8795Sh1gfFDcNkvZaLEChR3cB/I85lHxBl6IMYyvvyowMMbff29YRF6BQoBePRUABno67dEKlLGamvph4wvII+q20NnF7jclkB4vH+pYtgVGESJXi12GVRiOIeW6f4hyzuHyY65iAnzrfd55PIAVAcmybu6miFGw+un2qQQm/0P7Abq0WEFqu6bvrFvdSBfhNexG9skIXJYIWD5Ct/iaJJvLrtPYaYuNfU2hl/tPvwwTg36DXyMQpbySzURiFk8nnPs/gDhBL5nP8fmAaQ+LiZrN6huKYPBrp5vLHUpydU/mWbTr0czemKV0ETZiDroO5hplHJ/g8ZS+YrvwWxIaxaZYiiDXzrnJ8jd50FbzOkBERU2G46oYQhEai7RMhvfz63E3DtiKSy6vLq1rOOxHsH1YZraXPern8AN5qn/XPFqMJ1WFJQl6g1V1BAHLplwZtvDs6ZUcKpp3IfJtM5i9meh8fuEqb+zC5wFRSWVNFJNxl5wrXeHVGxfg3xemHVjB1iV1lcHurIbk30bkRo74cu/CvZFmrYsIionJVIxEwpxsELa5liWJyiIHswFruiwl0hBCBo1g9QD70jkmBDH3AckNKYb6498Vt+S9byzFA9GORd0iMYjneWfXBIAuZG3eEZLBaBL6LpUwJo=
     draft: true
     overwrite: true
+    name: ldrpyutils version $TRAVIS_TAG
     on:
       repo: CSIRO-enviro-informatics/ldrpyutils
+      tags: true
   - provider: pypi
     user: "jyu6"
     password: 
