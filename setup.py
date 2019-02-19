@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='ldrpyutils',
-    version='1.1.2',
+    version='1.1.9',
     packages=['ldrpyutils'],
     classifiers=[
         'Development Status :: 3 - Alpha',
