@@ -1,18 +1,28 @@
 language: python
 sudo: false
 cache:
-  - apt
-  - directories:
-    - "$HOME/.cache/pip"
-    - "$HOME/.pyenv"
+- apt
+- directories:
+  - "$HOME/.cache/pip"
+  - "$HOME/.pyenv"
 python:
-  - "3.4"
+- '3.4'
 virtualenv:
   system_site_packages: true
-# command to install dependencies
 install:
-  - pip install -r requirements.txt
-  - pip install -e . | cat
-# command to run tests
+- pip install -r requirements.txt
+- pip install -e . | cat
 script: pytest
-  
+deploy:
+  - provider: releases
+    api_key:
+      secure: am8m/v8Uy6Wx6MDXMqkQsiSimZYcu8795Sh1gfFDcNkvZaLEChR3cB/I85lHxBl6IMYyvvyowMMbff29YRF6BQoBePRUABno67dEKlLGamvph4wvII+q20NnF7jclkB4vH+pYtgVGESJXi12GVRiOIeW6f4hyzuHyY65iAnzrfd55PIAVAcmybu6miFGw+un2qQQm/0P7Abq0WEFqu6bvrFvdSBfhNexG9skIXJYIWD5Ct/iaJJvLrtPYaYuNfU2hl/tPvwwTg36DXyMQpbySzURiFk8nnPs/gDhBL5nP8fmAaQ+LiZrN6huKYPBrp5vLHUpydU/mWbTr0czemKV0ETZiDroO5hplHJ/g8ZS+YrvwWxIaxaZYiiDXzrnJ8jd50FbzOkBERU2G46oYQhEai7RMhvfz63E3DtiKSy6vLq1rOOxHsH1YZraXPern8AN5qn/XPFqMJ1WFJQl6g1V1BAHLplwZtvDs6ZUcKpp3IfJtM5i9meh8fuEqb+zC5wFRSWVNFJNxl5wrXeHVGxfg3xemHVjB1iV1lcHurIbk30bkRo74cu/CvZFmrYsIionJVIxEwpxsELa5liWJyiIHswFruiwl0hBCBo1g9QD70jkmBDH3AckNKYb6498Vt+S9byzFA9GORd0iMYjneWfXBIAuZG3eEZLBaBL6LpUwJo=
+    file: ''
+    on:
+      repo: CSIRO-enviro-informatics/ldrpyutils
+  - provider: pypi
+    user: "jyu6"
+    password: 
+       secure: "IaeISyJ3bP8b9h/+3nMmu+saQk9EoFJVFA5jqTUlzgA9IaKwuJWa0vrlK82qLbQtzXy9IUHw81hSTsUGoQ46xhXScApQf/hCG+khe9ZQEJY4Enj7UWLMCk0n2WhVWoFSbliRtySdWFAs6BxjWIoe9DPx+N5yrpwq43FUSyygfIgxAKWXKTBqDLoVt3nT04qCAt0Rj5YUJQBErrm4vcyiiMGAVaJcRbHN5y1jKjHJcZpv4mUO6HR9kxij8UuzrgDUz96jdRfTEekr8u+xdLd6q4QHSitci/AbNMOhFQz0HnWY2UQicR+ZpHMA5BENe+CY71y67BQ+XQwDhdVFg3yZOvDCVeM3hJFQr147+ojSCgJMUwMrXzMztcm9LymaTK7N7W2anVBIkFV8vGSJ4asynCeVN4asqHjfWqyBG+0UMWT8TykX5frXmZsZp7s2+4HQilb62QHS7L9Uz1OGhaiUOMsJ39T4ohj1BJuzFa4uWHO2UflZbPJJeIa0KZHooDVqnEEyx3B/fOT4UMWT5R63w+P+2lBt7l7SRAdxDdbwUIGaV2RIcQg/XskFJLDtLcNik1CdnsGPXaSuq+EehphER68QfbqKZtvPrSD+9kI2o0hkA+LtBl8q8MHc5KOndhbgj7+1HvuZUDFEiUI7TAkYnN4GR8eZVPBsMmPrwt/nkls="
+    on:
+      tags: true
