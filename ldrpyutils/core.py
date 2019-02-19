@@ -577,7 +577,7 @@ def get_registerinfo_multi_register(ws):
     return result
 
 def excel2ldr():
-    parser = argparse.ArgumentParser(description='Convert netCDF metadata to RDF.')
+    parser = argparse.ArgumentParser(description='Upload vocab content defined in Excel to a Linked Data Registry.')
     parser.add_argument('--user', action="store", dest="user", default=None, help="User name to authenticate with registry")
     parser.add_argument('--pass', action="store", dest="passwd", default=None, help="Password to authenticate with registry")
     parser.add_argument('--no-emitfiles', action="store_true", dest="noEmitFile", default=False, help="Flag to specify not to emit files")
@@ -638,6 +638,7 @@ def excel2ldr():
                          updateOnlineRegisters=updateOnlineRegisters,
                          verbose=verbose
                          )
+    
 
 
 if __name__ == "__main__":
