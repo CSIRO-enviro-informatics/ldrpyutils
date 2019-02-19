@@ -1,10 +1,22 @@
 # ldrpyutils
-Python utils for the Linked Data Registry (https://csiro-enviro-informatics.github.io/ldrpyutils)
+Python utils for the Linked Data Registry (https://csiro-enviro-informatics.github.io/ldrpyutils).
 
+[![Build Status](https://travis-ci.org/CSIRO-enviro-informatics/ldrpyutils.svg?branch=master)](https://travis-ci.org/CSIRO-enviro-informatics/ldrpyutils)
+
+## About
+
+This repository provides Python-based tools to interface with any [Linked Data Registry](http://ukgovld.github.io/ukgovldwg/guides/registry.html) instances. Currently tools developed help users with vocabulary content maintained in 
+a Excel format upload/update it to a Linked Data Registry instance.
+
+The two pathways for this is via:
+* Excel2ldrGui.exe (windows based tool)
+* `excel2ldr` command line tool
+
+Details are provided below.
+
+## Citation
 Persistent Link: http://doi.org/10.4225/08/5a2744c74d949 
 Attribution Statement: Yu, Jonathan (2017): ldrpyutils. v1. CSIRO. Software Collection. 10.4225/08/5a2744c74d949
-
-![Travis build](https://travis-ci.org/CSIRO-LW-LD/ldrpyutils.svg?branch=master)
 
 
 ## Excel2ldrGui Window-based tool
@@ -45,6 +57,11 @@ $ unzip csiro-starter-pack.zip
 # edit fields in examples/simple.xlsx to point to your register on a LDR instance
 # edit config to point to your LDR instance
 $ excel2ldr --user username --pass passwd examples/simple.xlsx
+
+#
+
+#Optionally with verbose to get logging output
+$ excel2ldr --verbose --user username --pass passwd examples/simple.xlsx
 ```
 
 
